@@ -29,21 +29,15 @@ document.body.innerHTML += `
 document.body.style.display = "flex";
 document.body.style.flexDirection = "row";
 
-document.getElementById("controls").style.marginLeft = "20px";
+document.getElementById("controls").style.position = "absolute";
+document.getElementById("controls").style.right = "20px";
+document.getElementById("controls").style.top = "20px";
+document.getElementById("controls").style.background = "rgba(255, 255, 255, 0.8)";
+document.getElementById("controls").style.padding = "10px";
+document.getElementById("controls").style.borderRadius = "5px";
 document.getElementById("controls").style.fontFamily = "Arial, sans-serif";
 
 document.getElementById("gameCanvas").style.border = "2px solid black";
-
-type="text/css">
-#controls {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 10px;
-  border-radius: 5px;
-}
-</style>
 
 class Tank {
   constructor(x, y, color, controls, direction) {
@@ -60,10 +54,10 @@ class Tank {
   }
 
   move() {
-    if (keys[this.controls.up]) this.y -= this.speed;
-    if (keys[this.controls.down]) this.y += this.speed;
-    if (keys[this.controls.left]) this.x -= this.speed;
-    if (keys[this.controls.right]) this.x += this.speed;
+    if (keys[this.controls.up] && this.y > 0) this.y -= this.speed;
+    if (keys[this.controls.down] && this.y + this.size < canvas.height) this.y += this.speed;
+    if (keys[this.controls.left] && this.x > 0) this.x -= this.speed;
+    if (keys[this.controls.right] && this.x + this.size < canvas.width) this.x += this.speed;
   }
 
   shoot() {
@@ -149,3 +143,33 @@ class Bonus {
   constructor(x, y, type) {
     this.x = x;
     this.y = y;
+    this.size = 20;
+    this.type = type;
+  }
+
+  draw() {
+    ctx.fillStyle = "yellow";
+    ctx.fillRect(this.x, this.y, this.size, this.size);
+  }
+}
+
+const bonuses = [
+  new Bonus(200, 200, "triple"),
+  new Bonus(400, 300, "speed"),
+  new Bonus(600, 100, "life")
+];
+
+const player1 = new Tank(100, 100, "blue", { up: "z", down: "s", left: "q", right: "d", shoot: "f" }, "right");
+const player2 = new Tank(600, 400, "red", { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight", shoot: "o" }, "left");
+
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  bonuses.forEach((bonus) => bonus.draw());
+  player1.update();
+  player2.update();
+  player1.draw();
+  player2.draw();
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
