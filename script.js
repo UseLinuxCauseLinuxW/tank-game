@@ -14,30 +14,48 @@ document.addEventListener("keyup", (e) => {
   keys[e.key] = false;
 });
 
-document.body.innerHTML += `
-  <div id="controls">
-    <h3>Controls</h3>
-    <p><b>Player 1 (Blue Tank)</b></p>
-    <p>Move: ZQSD</p>
-    <p>Shoot: F</p>
-    <p><b>Player 2 (Red Tank)</b></p>
-    <p>Move: Arrow Keys</p>
-    <p>Shoot: O</p>
-  </div>
+const controlsDiv = document.createElement("div");
+controlsDiv.id = "controls";
+controlsDiv.innerHTML = `
+  <h3>Controls</h3>
+  <p><b>Player 1 (Blue Tank)</b></p>
+  <p>Move: ZQSD</p>
+  <p>Shoot: F</p>
+  <p><b>Player 2 (Red Tank)</b></p>
+  <p>Move: Arrow Keys</p>
+  <p>Shoot: O</p>
 `;
+document.body.appendChild(controlsDiv);
 
 document.body.style.display = "flex";
 document.body.style.flexDirection = "row";
+document.body.style.justifyContent = "space-between";
+document.body.style.alignItems = "center";
 
-document.getElementById("controls").style.position = "absolute";
-document.getElementById("controls").style.right = "20px";
-document.getElementById("controls").style.top = "20px";
+document.getElementById("controls").style.position = "relative";
+document.getElementById("controls").style.right = "0";
+document.getElementById("controls").style.top = "0";
 document.getElementById("controls").style.background = "rgba(255, 255, 255, 0.8)";
-document.getElementById("controls").style.padding = "10px";
+document.getElementById("controls").style.padding = "15px";
 document.getElementById("controls").style.borderRadius = "5px";
 document.getElementById("controls").style.fontFamily = "Arial, sans-serif";
+document.getElementById("controls").style.boxShadow = "0 0 10px rgba(0,0,0,0.2)";
+document.getElementById("controls").style.width = "200px";
+document.getElementById("controls").style.textAlign = "left";
 
 document.getElementById("gameCanvas").style.border = "2px solid black";
+
+document.getElementById("gameCanvas").style.margin = "auto";
+
+document.getElementById("gameCanvas").style.display = "block";
+
+document.getElementById("controls").style.marginRight = "20px";
+
+document.body.style.padding = "20px";
+
+document.body.style.height = "100vh";
+
+document.body.style.overflow = "hidden";
 
 class Tank {
   constructor(x, y, color, controls, direction) {
@@ -136,20 +154,6 @@ class Bullet {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     ctx.fill();
-  }
-}
-
-class Bonus {
-  constructor(x, y, type) {
-    this.x = x;
-    this.y = y;
-    this.size = 20;
-    this.type = type;
-  }
-
-  draw() {
-    ctx.fillStyle = "yellow";
-    ctx.fillRect(this.x, this.y, this.size, this.size);
   }
 }
 
