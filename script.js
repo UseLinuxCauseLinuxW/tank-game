@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", (e) => keys[e.key] = true);
   document.addEventListener("keyup", (e) => keys[e.key] = false);
 
+  // Affichage des contrôles
   const controlsDiv = document.createElement("div");
   controlsDiv.id = "controls";
   controlsDiv.innerHTML = `
@@ -61,7 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
       this.lives = 3;
       this.tripleShot = false;
       this.bullets = [];
-      this.direction = "right"; // valeur par défaut
+      this.direction = "right"; // Direction par défaut
+      this.lastShotTime = 0; // Timer pour le tir (en ms)
     }
     move() {
       if (keys[this.controls.up] && this.y > 0) { this.y -= this.speed; this.direction = "up"; }
@@ -70,7 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (keys[this.controls.right] && this.x + this.size < canvas.width) { this.x += this.speed; this.direction = "right"; }
     }
     shoot() {
-      if (keys[this.controls.shoot]) {
+      // Autoriser un tir toutes les 1 seconde (1000 ms)
+      if (keys[this.controls.shoot] && Date.now() - this.lastShotTime > 1000) {
         let speedX = 0, speedY = 0;
         if (this.direction === "right") { speedX = 5; speedY = 0; }
         else if (this.direction === "left") { speedX = -5; speedY = 0; }
@@ -89,6 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           this.bullets.push(new Bullet(this.x + this.size/2, this.y + this.size/2, speedX, speedY));
         }
+        this.lastShotTime = Date.now();
         keys[this.controls.shoot] = false;
       }
     }
@@ -134,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Vérification des collisions entre balles et tanks
+    // Collision balle/tank
     player1.bullets.forEach((bullet, i) => {
       if (checkCollision(player2, bullet)) {
         player2.lives--;
@@ -155,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = "red";
     ctx.fillText("Vies: " + player2.lives, canvas.width - 100, 30);
     
-    // Game over
+    // Game Over
     if (player1.lives <= 0 || player2.lives <= 0) {
       ctx.fillStyle = "rgba(0,0,0,0.7)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -182,6 +186,6 @@ document.addEventListener("DOMContentLoaded", () => {
     player2.draw();
     requestAnimationFrame(gameLoop);
   }
-
+  
   gameLoop();
 });
