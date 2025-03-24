@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     shoot() {
       // Autoriser un tir toutes les 1 seconde (1000 ms)
-      if (keys[this.controls.shoot] && Date.now() - this.lastShotTime > 1000) {
+      if (keys[this.controls.shoot] && Date.now() - this.lastShotTime > 500) {
         let speedX = 0, speedY = 0;
         if (this.direction === "right") { speedX = 5; speedY = 0; }
         else if (this.direction === "left") { speedX = -5; speedY = 0; }
